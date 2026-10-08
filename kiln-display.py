@@ -10,7 +10,8 @@ import board
 import adafruit_rgb_display.st7789 as st7789
 import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
-import config
+#import config
+gpio_beeper = 29
 
 # This is designed to drive an Adafruit Mini PiTFT 1.3" (https://www.adafruit.com/product/4484)
 #
@@ -24,9 +25,9 @@ import config
 
 
 def beep(delay):
-    GPIO.output(config.gpio_beeper, GPIO.HIGH)
+    GPIO.output(gpio_beeper, GPIO.HIGH)
     time.sleep(delay)
-    GPIO.output(config.gpio_beeper, GPIO.LOW)
+    GPIO.output(gpio_beeper, GPIO.LOW)
 
 
 def morse(code):
@@ -47,8 +48,8 @@ def display(hostname, minupdatesecs, font_ttf):
     # setup beeper GPIO
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
-    GPIO.setup(config.gpio_beeper, GPIO.OUT)
-    GPIO.output(config.gpio_beeper, GPIO.LOW)
+    GPIO.setup(gpio_beeper, GPIO.OUT)
+    GPIO.output(gpio_beeper, GPIO.LOW)
 
     # Configuration for CS and DC pins for Raspberry Pi
     cs_pin = digitalio.DigitalInOut(board.CE0)
@@ -204,7 +205,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Log kiln data for analysis.')
     parser.add_argument('--hostname', type=str, default="localhost:8081", help="The kiln-controller hostname:port")
     parser.add_argument('--minupdatesecs', type=int, default="10", help="Number of seconds between screen updates")
-    parser.add_argument('--font_ttf', type=str, default='/home/pi/DroidSans.ttf', help="Font to use for text display")
+    parser.add_argument('--font_ttf', type=str, default='/home/kilna/DroidSans.ttf', help="Font to use for text display")
     args = parser.parse_args()
 
     display(args.hostname, args.minupdatesecs, args.font_ttf)
